@@ -1,40 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
 import { Context } from '../context/BlogContext';
-import { Feather } from '@expo/vector-icons';
+import BlogPostForm from '../components/BlogPostForm';
 
 const EditScreen = ({ navigation }) => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const { addBlogPost } = useContext(Context);
+  const { state, editBlogPost } = useContext(Context);
+  const id = navigation.getParam('id');
+  const blogPost = state.find(post => post.id === id);
 
   return (
-    <View>
-      <Text style={styles.label}>Enter Title:</Text>
-      <TextInput style={styles.inputStyle} title={title} onChangeText={setTitle}/>
-      <Text style={styles.label}>Enter Content:</Text>
-      <TextInput style={styles.inputStyle} title={content} onChangeText={setContent}/>
-      <Button
-        onPress={() => addBlogPost(title, content, () => {
-          navigation.navigate('Index');
-        })}
-        title="Save Changes"/>
-    </View>
+    <BlogPostForm />
   );
 };
 
-const styles = StyleSheet.create({
-  inputStyle:{
-    borderWidth: 2,
-    borderColor: 'black',
-    margin: 10,
-    fontSize: 18,
-    padding: 5,
-  },
-  label: {
-    fontSize: 20,
-    marginLeft: 10,
-  }
-});
+const styles = StyleSheet.create({});
 
 export default EditScreen;
