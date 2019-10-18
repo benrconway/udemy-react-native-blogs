@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,27 @@ import { Context } from '../context/BlogContext';
 import { Feather } from '@expo/vector-icons';
 
 const IndexScreen = ({ navigation }) => {
-  const { state, deleteBlogPost } = useContext(Context);
+  const { state, deleteBlogPost, getBlogPosts } = useContext(Context);
+
+  useEffect(()=> {
+    getBlogPosts();
+
+    // this addListener returns a listener that we want to clean up to remove a source of  memory leaks
+    const listener = navigation.addListener('didFocus', () => {
+      getBlogPosts();
+    });
+
+    // this function will be called if this version of IndexScreen is ever completely removed.
+    return () => {
+      listener.remove();
+    };
+  }, []);
 
   return (
     <View>
       <FlatList
       data={state}
-      keyExtractor={blogPost => blogPost.title}
+      keyExtractor={blogPost => `${blogPost.id}`}
       renderItem={({ item })=> {
         return (
           <TouchableOpacity onPress={() => navigation.navigate('Show', {
