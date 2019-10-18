@@ -8,7 +8,11 @@ const CreateScreen = ({ navigation }) => {
 
   return (
     <BlogPostForm
-      onSubmit={addBlogPost}
+      onSubmit={(title, content) => {
+        addBlogPost(title, content, () => {
+          navigation.navigate('Index');
+        })
+      }}
 
     />
   );
